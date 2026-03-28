@@ -1,0 +1,84 @@
+/* Review step */
+.review-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 1.5rem;
+}
+
+.review-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+}
+
+.review-row.total {
+  color: var(--text);
+  font-size: 0.8rem;
+  border-bottom: none;
+  padding-top: 1rem;
+}
+
+.review-val {
+  color: var(--text);
+  letter-spacing: 0.15em;
+}
+
+.review-val.gold {
+  color: var(--gold);
+}
+
+.review-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0.5rem 0;
+}
+
+.fine-print {
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  line-height: 1.7;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  padding-top: 1rem;
+}
+
+.error-msg {
+  color: var(--red);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  margin-top: 1rem;
+}
+
+/* Success page */
+.success-icon {
+  font-size: 2rem;
+  color: var(--gold);
+  margin-bottom: 1rem;
+  animation: pulse 2s ease infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.success-msg {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  line-height: 2;
+  margin: 1.5rem 0 0.5rem;
+}
+
+.success-plate {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  margin-top: 0.5rem;
+}
