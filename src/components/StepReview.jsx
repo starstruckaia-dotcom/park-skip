@@ -36,8 +36,8 @@ export default function StepReview({ data, onBack }) {
           },
         ],
         mode: 'payment',
-        successUrl: `${window.location.origin}/parkskip/?success=true&plate=${data.plate}`,
-        cancelUrl: `${window.location.origin}/parkskip/`,
+        successUrl: `${window.location.origin}/park-skip/?success=true&plate=${data.plate}`,
+        cancelUrl: `${window.location.origin}/park-skip/`,
         clientReferenceId: data.plate,
         metadata: {
           plate: data.plate,
@@ -71,7 +71,7 @@ export default function StepReview({ data, onBack }) {
           Welcome to the premium experience.
         </p>
         <p className="success-plate">Plate: {urlParams.get('plate')}</p>
-        <button className="btn-primary" style={{marginTop:'2rem'}} onClick={() => window.location.href = '/parkskip/'}>
+        <button className="btn-primary" style={{marginTop:'2rem'}} onClick={() => window.location.href = '/park-skip/'}>
           Initiate New Premium Session →
         </button>
       </div>
