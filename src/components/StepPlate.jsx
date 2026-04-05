@@ -9,8 +9,8 @@ export default function StepPlate({ data, onNext }) {
 
   return (
     <div className="card">
-      <div className="card-title">Premium Plate</div>
-      <div className="card-subtitle">Registration Identification Protocol</div>
+      <div className="card-title">Enter Plate</div>
+      <div className="card-subtitle">Your vehicle license plate</div>
 
       <input
         className="premium-input"
@@ -22,7 +22,7 @@ export default function StepPlate({ data, onNext }) {
         maxLength={10}
         autoFocus
       />
-      <span className="input-label">Enter your premium vehicle registration</span>
+      <span className="input-label">Enter your license plate number</span>
 
       <div className="btn-row">
         <button
@@ -30,7 +30,7 @@ export default function StepPlate({ data, onNext }) {
           onClick={handleNext}
           disabled={plate.trim().length < 2}
         >
-          Proceed to Zone Selection →
+          Continue →
         </button>
       </div>
     </div>
