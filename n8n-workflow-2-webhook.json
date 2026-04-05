@@ -1,0 +1,64 @@
+{
+  "name": "Park&Skip - Payment Success Webhook",
+  "nodes": [
+    {
+      "name": "Stripe Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "parameters": {
+        "path": "parkskip-payment-success",
+        "httpMethod": "POST",
+        "responseMode": "onReceived"
+      }
+    },
+    {
+      "name": "Extract Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [500, 300],
+      "parameters": {
+        "values": {
+          "string": [
+            { "name": "plate", "value": "={{$json.body.data.object.metadata.plate}}" },
+            { "name": "lot_id", "value": "={{$json.body.data.object.metadata.lot_id}}" },
+            { "name": "duration", "value": "={{$json.body.data.object.metadata.duration}}" },
+            { "name": "stripe_payment_id", "value": "={{$json.body.data.object.id}}" }
+          ],
+          "number": [
+            { "name": "total", "value": "={{$json.body.data.object.amount / 100}}" },
+            { "name": "platform_fee", "value": "1.00" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Save to Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [750, 300],
+      "parameters": {
+        "operation": "create",
+        "tableId": "transactions",
+        "fieldsUi": {
+          "fieldValues": [
+            { "fieldId": "plate", "fieldValue": "={{$json.plate}}" },
+            { "fieldId": "lot_id", "fieldValue": "={{$json.lot_id}}" },
+            { "fieldId": "duration", "fieldValue": "={{$json.duration}}" },
+            { "fieldId": "total", "fieldValue": "={{$json.total}}" },
+            { "fieldId": "platform_fee", "fieldValue": "={{$json.platform_fee}}" },
+            { "fieldId": "stripe_payment_id", "fieldValue": "={{$json.stripe_payment_id}}" }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Stripe Webhook": {
+      "main": [[{ "node": "Extract Data", "type": "main", "index": 0 }]]
+    },
+    "Extract Data": {
+      "main": [[{ "node": "Save to Supabase", "type": "main", "index": 0 }]]
+    }
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "name": "Park&Skip - Create Checkout Session",
+  "nodes": [
+    {
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "parameters": {
+        "path": "parkskip-checkout",
+        "httpMethod": "POST",
+        "responseMode": "lastNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      }
+    },
+    {
+      "name": "Get Lot from Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [500, 300],
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "lots",
+        "filterType": "string",
+        "filterString": "id=eq.{{$json.body.lot_id}}"
+      }
+    },
+    {
+      "name": "Create Stripe Checkout",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [750, 300],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.stripe.com/v1/checkout/sessions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer sk_test_YOUR_SECRET_KEY"
+            },
+            {
+              "name": "Stripe-Account",
+              "value": "={{$('Get Lot from Supabase').item.json.stripe_account_id}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "mode",
+              "value": "payment"
+            },
+            {
+              "name": "line_items[0][price_data][currency]",
+              "value": "cad"
+            },
+            {
+              "name": "line_items[0][price_data][product_data][name]",
+              "value": "=Parking - {{$('Webhook').item.json.body.duration}}"
+            },
+            {
+              "name": "line_items[0][price_data][unit_amount]",
+              "value": "={{Math.round($('Get Lot from Supabase').item.json['price_' + $('Webhook').item.json.body.duration] * 100)}}"
+            },
+            {
+              "name": "line_items[0][quantity]",
+              "value": "1"
+            },
+            {
+              "name": "application_fee_amount",
+              "value": "100"
+            },
+            {
+              "name": "payment_intent_data[metadata][plate]",
+              "value": "={{$('Webhook').item.json.body.plate}}"
+            },
+            {
+              "name": "payment_intent_data[metadata][lot_id]",
+              "value": "={{$('Webhook').item.json.body.lot_id}}"
+            },
+            {
+              "name": "payment_intent_data[metadata][duration]",
+              "value": "={{$('Webhook').item.json.body.duration}}"
+            },
+            {
+              "name": "success_url",
+              "value": "https://starstruckaia-dotcom.github.io/park-skip/?success=true&plate={{$('Webhook').item.json.body.plate}}"
+            },
+            {
+              "name": "cancel_url",
+              "value": "https://starstruckaia-dotcom.github.io/park-skip/?lot={{$('Webhook').item.json.body.lot_id}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Return Checkout URL",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [1000, 300],
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "url",
+              "value": "={{$json.url}}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{ "node": "Get Lot from Supabase", "type": "main", "index": 0 }]]
+    },
+    "Get Lot from Supabase": {
+      "main": [[{ "node": "Create Stripe Checkout", "type": "main", "index": 0 }]]
+    },
+    "Create Stripe Checkout": {
+      "main": [[{ "node": "Return Checkout URL", "type": "main", "index": 0 }]]
+    }
+  }
+}

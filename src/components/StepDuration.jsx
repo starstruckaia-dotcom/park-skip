@@ -1,54 +1,45 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
-const DURATIONS = [
-  { id: '1hr', label: '1 Hour', base: 3.00 },
-  { id: '2hr', label: '2 Hours', base: 5.00 },
-  { id: '4hr', label: '4 Hours', base: 9.00 },
-  { id: '8hr', label: '8 Hours', base: 15.00 },
-  { id: '24hr', label: '24 Hours', base: 25.00 },
-]
+const N8N_BASE = 'https://lubiai.ca'
+const DURATIONS = ['1hr', '2hr', '4hr', '8hr', '24hr']
+const LABELS = { '1hr': '1 Hour', '2hr': '2 Hours', '4hr': '4 Hours', '8hr': '8 Hours', '24hr': '24 Hours' }
 
-const FEE_RATE = 0.15
-
-export default function StepDuration({ data, onNext, onBack }) {
+export default function StepDuration({ data, lotId, onNext, onBack }) {
   const [duration, setDuration] = useState(data.duration)
+  const [prices, setPrices] = useState(null)
+  const [lotName, setLotName] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
 
-  const selected = DURATIONS.find(d => d.id === duration)
-  const base = selected?.base || 0
-  const fee = parseFloat((base * FEE_RATE).toFixed(2))
-  const total = parseFloat((base + fee).toFixed(2))
+  useEffect(() => {
+    fetch(`${N8N_BASE}/webhook/parkskip-get-lot?lot_id=${lotId}`)
+      .then(r => r.json())
+      .then(d => {
+        const lot = Array.isArray(d) ? d[0] : d
+        setPrices({ '1hr': lot.price_1hr, '2hr': lot.price_2hr, '4hr': lot.price_4hr, '8hr': lot.price_8hr, '24hr': lot.price_24hr })
+        setLotName(lot.name)
+        setLoading(false)
+      })
+      .catch(() => { setError('Could not load lot pricing.'); setLoading(false) })
+  }, [lotId])
 
-  const handleNext = () => {
-    if (!selected) return
-    onNext({ duration, base_amount: base, fee_amount: fee, total })
-  }
+  if (loading) return <div className="card"><div className="card-title">Loading...</div><div className="card-subtitle">Fetching lot information</div></div>
+  if (error) return <div className="card"><div className="card-title">Error</div><p style={{fontSize:'0.7rem',color:'var(--text-dim)',marginTop:'1rem'}}>{error}</p><button className="btn-back" onClick={onBack}>Back</button></div>
 
   return (
     <div className="card">
-      <div className="card-title">Premium Duration</div>
-      <div className="card-subtitle">Temporal Parking Allocation</div>
-
+      <div className="card-title">Select Duration</div>
+      <div className="card-subtitle">{lotName}</div>
       <div className="options-grid">
-        {DURATIONS.map(d => (
-          <button
-            key={d.id}
-            className={`option-card ${duration === d.id ? 'selected' : ''}`}
-            onClick={() => setDuration(d.id)}
-          >
-            <span className="option-label">{d.label}</span>
-            <span className="option-sub">${d.base.toFixed(2)} base rate</span>
+        {DURATIONS.filter(d => prices[d]).map(d => (
+          <button key={d} className={`option-card ${duration === d ? 'selected' : ''}`} onClick={() => setDuration(d)}>
+            <span className="option-label">{LABELS[d]}</span>
+            <span className="option-sub">${Number(prices[d]).toFixed(2)} CAD</span>
           </button>
         ))}
       </div>
-
       <div className="btn-row">
-        <button
-          className="btn-primary"
-          onClick={handleNext}
-          disabled={!duration}
-        >
-          Proceed to Premium Review →
-        </button>
+        <button className="btn-primary" onClick={() => onNext({ duration, price: prices[duration] })} disabled={!duration}>Continue to Payment →</button>
         <button className="btn-back" onClick={onBack}>← Back</button>
       </div>
     </div>

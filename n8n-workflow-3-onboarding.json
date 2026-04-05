@@ -1,0 +1,149 @@
+{
+  "name": "Park&Skip - Lot Owner Onboarding",
+  "nodes": [
+    {
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "parameters": {
+        "path": "parkskip-onboard-lot",
+        "httpMethod": "POST",
+        "responseMode": "lastNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      }
+    },
+    {
+      "name": "Save Lot to Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [500, 300],
+      "parameters": {
+        "operation": "create",
+        "tableId": "lots",
+        "fieldsUi": {
+          "fieldValues": [
+            { "fieldId": "name", "fieldValue": "={{$json.body.name}}" },
+            { "fieldId": "address", "fieldValue": "={{$json.body.address}}" },
+            { "fieldId": "owner_name", "fieldValue": "={{$json.body.owner_name}}" },
+            { "fieldId": "owner_email", "fieldValue": "={{$json.body.owner_email}}" },
+            { "fieldId": "price_1hr", "fieldValue": "={{$json.body.price_1hr}}" },
+            { "fieldId": "price_2hr", "fieldValue": "={{$json.body.price_2hr}}" },
+            { "fieldId": "price_4hr", "fieldValue": "={{$json.body.price_4hr}}" },
+            { "fieldId": "price_8hr", "fieldValue": "={{$json.body.price_8hr}}" },
+            { "fieldId": "price_24hr", "fieldValue": "={{$json.body.price_24hr}}" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create Stripe Connect Account",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [750, 300],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.stripe.com/v1/accounts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer sk_test_YOUR_SECRET_KEY"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            { "name": "type", "value": "express" },
+            { "name": "country", "value": "CA" },
+            { "name": "email", "value": "={{$('Webhook').item.json.body.owner_email}}" },
+            { "name": "capabilities[card_payments][requested]", "value": "true" },
+            { "name": "capabilities[transfers][requested]", "value": "true" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update Lot with Stripe ID",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1000, 300],
+      "parameters": {
+        "operation": "update",
+        "tableId": "lots",
+        "filterType": "string",
+        "filterString": "id=eq.{{$('Save Lot to Supabase').item.json.id}}",
+        "fieldsUi": {
+          "fieldValues": [
+            { "fieldId": "stripe_account_id", "fieldValue": "={{$json.id}}" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create Onboarding Link",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1250, 300],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.stripe.com/v1/account_links",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer sk_test_YOUR_SECRET_KEY"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            { "name": "account", "value": "={{$('Create Stripe Connect Account').item.json.id}}" },
+            { "name": "refresh_url", "value": "https://starstruckaia-dotcom.github.io/park-skip/onboard-refresh" },
+            { "name": "return_url", "value": "https://starstruckaia-dotcom.github.io/park-skip/onboard-complete" },
+            { "name": "type", "value": "account_onboarding" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Return Onboarding URL",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [1500, 300],
+      "parameters": {
+        "values": {
+          "string": [
+            { "name": "onboarding_url", "value": "={{$json.url}}" },
+            { "name": "lot_id", "value": "={{$('Save Lot to Supabase').item.json.id}}" }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{ "node": "Save Lot to Supabase", "type": "main", "index": 0 }]]
+    },
+    "Save Lot to Supabase": {
+      "main": [[{ "node": "Create Stripe Connect Account", "type": "main", "index": 0 }]]
+    },
+    "Create Stripe Connect Account": {
+      "main": [[{ "node": "Update Lot with Stripe ID", "type": "main", "index": 0 }]]
+    },
+    "Update Lot with Stripe ID": {
+      "main": [[{ "node": "Create Onboarding Link", "type": "main", "index": 0 }]]
+    },
+    "Create Onboarding Link": {
+      "main": [[{ "node": "Return Onboarding URL", "type": "main", "index": 0 }]]
+    }
+  }
+}
