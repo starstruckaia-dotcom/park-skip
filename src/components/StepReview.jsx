@@ -28,7 +28,7 @@ export default function StepReview({ data, onBack }) {
               currency: 'cad',
               product_data: {
                 name: `Park&Skip — Zone ${data.zone} (${data.duration})`,
-                description: `Parking for plate ${data.plate}. Includes 15% premium convenience fee.`,
+                description: `Parking for plate ${data.plate}. Includes 15%  convenience fee.`,
               },
               unit_amount: Math.round(data.total * 100),
             },
