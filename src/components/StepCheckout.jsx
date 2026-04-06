@@ -12,7 +12,7 @@ export default function StepCheckout({ data, lotId, onBack }) {
     try {
       const res = await fetch(`${N8N_BASE}/webhook/parkskip-checkout`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-webhook-secret': import.meta.env.VITE_WEBHOOK_SECRET },
+        headers: { 'Content-Type': 'application/json', 'Authorization': import.meta.env.VITE_WEBHOOK_SECRET },
         body: JSON.stringify({ lot_id: lotId, plate: data.plate, duration: data.duration })
       })
       const json = await res.json()
