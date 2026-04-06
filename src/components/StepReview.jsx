@@ -28,7 +28,7 @@ export default function StepReview({ data, onBack }) {
               currency: 'cad',
               product_data: {
                 name: `Park&Skip — Zone ${data.zone} (${data.duration})`,
-                description: `Premium parking for plate ${data.plate}. Includes 15% premium convenience fee.`,
+                description: `Parking for plate ${data.plate}. Includes 15% premium convenience fee.`,
               },
               unit_amount: Math.round(data.total * 100),
             },
@@ -52,7 +52,7 @@ export default function StepReview({ data, onBack }) {
 
       if (error) setError(error.message)
     } catch (err) {
-      setError('A premium error has occurred. Please try again.')
+      setError('An error has occurred. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -65,14 +65,14 @@ export default function StepReview({ data, onBack }) {
       <div className="card">
         <div className="success-icon">✦</div>
         <div className="card-title">Transaction Authorized</div>
-        <div className="card-subtitle">Premium Session Confirmed</div>
+        <div className="card-subtitle">Session Confirmed</div>
         <p className="success-msg">
-          Your premium parking session has been authorized.<br />
-          Welcome to the premium experience.
+          Your parking session has been authorized.<br />
+          
         </p>
         <p className="success-plate">Plate: {urlParams.get('plate')}</p>
         <button className="btn-primary" style={{marginTop:'2rem'}} onClick={() => window.location.href = '/park-skip/'}>
-          Initiate New Premium Session →
+          Start New Session →
         </button>
       </div>
     )
@@ -80,7 +80,7 @@ export default function StepReview({ data, onBack }) {
 
   return (
     <div className="card">
-      <div className="card-title">Premium Review</div>
+      <div className="card-title">Review</div>
       <div className="card-subtitle">Transaction Authorization Summary</div>
 
       <div className="review-rows">
@@ -89,7 +89,7 @@ export default function StepReview({ data, onBack }) {
           <span className="review-val">{data.plate}</span>
         </div>
         <div className="review-row">
-          <span>Premium Zone</span>
+          <span>Zone</span>
           <span className="review-val">Zone {data.zone}</span>
         </div>
         <div className="review-row">
@@ -102,18 +102,18 @@ export default function StepReview({ data, onBack }) {
           <span className="review-val">${data.base_amount.toFixed(2)}</span>
         </div>
         <div className="review-row">
-          <span>Premium Convenience Fee™</span>
+          <span>Convenience Fee™</span>
           <span className="review-val gold">${data.fee_amount.toFixed(2)}</span>
         </div>
         <div className="review-row total">
-          <span>Total Premium Amount</span>
+          <span>Total Amount</span>
           <span className="review-val gold">${data.total.toFixed(2)} CAD</span>
         </div>
       </div>
 
       <p className="fine-print">
-        * Premium convenience fee is mandatory, non-negotiable, and enhances your premium experience.
-        By proceeding you agree to our Premium Terms of Premium Service (Premium Edition).
+        
+        
       </p>
 
       {error && <p className="error-msg">{error}</p>}
@@ -124,7 +124,7 @@ export default function StepReview({ data, onBack }) {
           onClick={handlePayment}
           disabled={loading}
         >
-          {loading ? 'Authorizing Premium Transaction...' : 'Authorize Premium Transaction →'}
+          {loading ? 'Authorizing...' : 'Authorize Payment →'}
         </button>
         <button className="btn-back" onClick={onBack}>← Back</button>
       </div>

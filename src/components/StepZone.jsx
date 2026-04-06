@@ -1,10 +1,10 @@
 import { useState } from 'react'
 
 const ZONES = [
-  { id: 'A', label: 'Zone A', sub: 'Premium Central' },
-  { id: 'B', label: 'Zone B', sub: 'Premium Adjacent' },
-  { id: 'C', label: 'Zone C', sub: 'Premium Peripheral' },
-  { id: 'D', label: 'Zone D', sub: 'Premium Remote' },
+  { id: 'A', label: 'Zone A', sub: 'Central' },
+  { id: 'B', label: 'Zone B', sub: 'Adjacent' },
+  { id: 'C', label: 'Zone C', sub: 'Peripheral' },
+  { id: 'D', label: 'Zone D', sub: 'Remote' },
 ]
 
 export default function StepZone({ data, onNext, onBack }) {
@@ -12,7 +12,7 @@ export default function StepZone({ data, onNext, onBack }) {
 
   return (
     <div className="card">
-      <div className="card-title">Premium Zone</div>
+      <div className="card-title">Parking Zone</div>
       <div className="card-subtitle">Spatial Allocation Selection</div>
 
       <div className="options-grid cols-2">
