@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const WEBHOOK_URL = "https://lubiai.ca/webhook/parkskip-onboard";
+const WEBHOOK_URL = "https://lubiai.ca/webhook/parkskip-onboard-lot";
 const steps = ["Your Info", "Lot Details", "Pricing", "Review"];
 const initialForm = { owner_name: "", email: "", phone: "", lot_name: "", address: "", city: "", capacity: "", price_1hr: "", price_2hr: "", price_4hr: "", price_8hr: "", price_24hr: "" };
 
