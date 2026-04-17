@@ -258,7 +258,7 @@ export default function Owner() {
 }
 
 const S = {
-  page:{minHeight:"100vh",backgroundColor:"#F5F5F5",fontFamily:"'Cormorant Garamond',Georgia,serif"},
+  page:{minHeight:"100vh",width:"100%",backgroundColor:"#F5F5F5",fontFamily:"'Cormorant Garamond',Georgia,serif"},
   centered:{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",minHeight:"100vh",gap:"16px"},
   header:{backgroundColor:"#1A1A1A",padding:"20px 24px",display:"flex",justifyContent:"space-between",alignItems:"flex-start"},
   logo:{fontSize:"20px",fontWeight:700,color:"#FFFFFF",letterSpacing:"0.05em",fontFamily:"sans-serif"},
