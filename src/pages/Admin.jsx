@@ -42,15 +42,15 @@ export default function Admin() {
     header:{marginBottom:"40px"},
     badge:{display:"inline-block",border:"1px solid rgba(201,168,76,0.4)",color:"#C9A84C",fontSize:"10px",letterSpacing:"0.3em",padding:"4px 10px",marginBottom:"12px"},
     title:{margin:0,fontSize:"28px",fontWeight:300,letterSpacing:"0.2em",color:"#F5F0E8"},
-    subtitle:{margin:"6px 0 0",fontSize:"12px",color:"rgba(255,255,255,0.3)",letterSpacing:"0.1em"},
-    loginBox:{maxWidth:"360px",margin:"100px auto",background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.08)",padding:"40px"},
+    subtitle:{margin:"6px 0 0",fontSize:"12px",color:"rgba(255,255,255,0.6)",letterSpacing:"0.1em"},
+    loginBox:{maxWidth:"360px",margin:"100px auto",background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.15)",padding:"40px"},
     label:{display:"block",fontSize:"10px",letterSpacing:"0.2em",color:"rgba(255,255,255,0.4)",marginBottom:"8px",textTransform:"uppercase"},
     input:{width:"100%",background:"transparent",border:"none",borderBottom:"1px solid rgba(255,255,255,0.1)",padding:"10px 0",color:"#F5F0E8",fontSize:"15px",fontFamily:"'Cormorant Garamond',Georgia,serif",outline:"none",boxSizing:"border-box",marginBottom:"24px"},
     btn:{background:"transparent",border:"1px solid rgba(201,168,76,0.5)",color:"#C9A84C",fontSize:"11px",letterSpacing:"0.2em",padding:"12px 24px",cursor:"pointer",fontFamily:"'Cormorant Garamond',Georgia,serif",width:"100%"},
     error:{color:"#C0392B",fontSize:"12px",marginTop:"12px",fontFamily:"monospace"},
     table:{width:"100%",borderCollapse:"collapse"},
-    th:{fontSize:"10px",letterSpacing:"0.15em",color:"rgba(255,255,255,0.3)",textTransform:"uppercase",padding:"12px 16px",textAlign:"left",borderBottom:"1px solid rgba(255,255,255,0.06)"},
-    td:{padding:"16px",borderBottom:"1px solid rgba(255,255,255,0.04)",fontSize:"13px",color:"rgba(255,255,255,0.7)",verticalAlign:"top"},
+    th:{fontSize:"10px",letterSpacing:"0.15em",color:"rgba(255,255,255,0.6)",textTransform:"uppercase",padding:"12px 16px",textAlign:"left",borderBottom:"1px solid rgba(255,255,255,0.06)"},
+    td:{padding:"16px",borderBottom:"1px solid rgba(255,255,255,0.04)",fontSize:"13px",color:"rgba(255,255,255,0.9)",verticalAlign:"top"},
     activeBadge:{display:"inline-block",padding:"3px 10px",fontSize:"10px",letterSpacing:"0.1em",border:"1px solid rgba(100,200,100,0.4)",color:"rgba(100,200,100,0.8)"},
     inactiveBadge:{display:"inline-block",padding:"3px 10px",fontSize:"10px",letterSpacing:"0.1em",border:"1px solid rgba(255,100,100,0.3)",color:"rgba(255,100,100,0.6)"},
     toggleBtn:{background:"transparent",border:"1px solid rgba(201,168,76,0.3)",color:"#C9A84C",fontSize:"10px",letterSpacing:"0.1em",padding:"6px 14px",cursor:"pointer",fontFamily:"'Cormorant Garamond',Georgia,serif"},
@@ -77,7 +77,7 @@ export default function Admin() {
         <h1 style={S.title}>ADMIN DASHBOARD</h1>
         <p style={S.subtitle}>{lots.length} LOT{lots.length!==1?"S":""} REGISTERED</p>
       </div>
-      {loading ? <p style={{color:"rgba(255,255,255,0.3)",letterSpacing:"0.1em"}}>Loading...</p> : (
+      {loading ? <p style={{color:"rgba(255,255,255,0.6)",letterSpacing:"0.1em"}}>Loading...</p> : (
         <div style={{overflowX:"auto"}}>
           <table style={S.table}>
             <thead>
