@@ -72,7 +72,7 @@ export default function Admin() {
   );
 
   return (
-    <div style={{minHeight:"100vh",backgroundColor:"#F7F8FA",fontFamily:"Georgia,serif"}}>
+    <div style={{minHeight:"100vh",backgroundColor:"#F7F8FA",fontFamily:"Georgia,serif",margin:0,padding:0}}>
       {/* Top Nav */}
       <div style={{backgroundColor:"#fff",borderBottom:"1px solid #E0E0E0",padding:"0 32px",display:"flex",alignItems:"center",justifyContent:"space-between",height:"60px"}}>
         <div style={{display:"flex",alignItems:"center",gap:"12px"}}>
@@ -98,48 +98,48 @@ export default function Admin() {
                 <thead>
                   <tr style={{backgroundColor:"#F7F8FA",borderBottom:"1px solid #E0E0E0"}}>
                     {["Lot","Owner","Contact","Address","Pricing","Stripe","Status","Action"].map(h=>(
-                      <th key={h} style={{padding:"12px 16px",textAlign:"left",fontSize:"11px",fontWeight:"700",color:"#888",letterSpacing:"0.08em",textTransform:"uppercase",whiteSpace:"nowrap"}}>{h}</th>
+                      <th key={h} style={{padding:"12px 16px",textAlign:"left",fontSize:"11px",borderRight:"1px solid #E8E8E8",fontWeight:"700",color:"#888",letterSpacing:"0.08em",textTransform:"uppercase",whiteSpace:"nowrap"}}>{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {lots.map((lot,i)=>(
                     <tr key={lot.id} style={{borderBottom:"1px solid #F0F0F0",backgroundColor:i%2===0?"#fff":"#FAFAFA"}}>
-                      <td style={{padding:"14px 16px",verticalAlign:"top"}}>
+                      <td style={{padding:"14px 16px",verticalAlign:"top",borderRight:"1px solid #F0F0F0"}}>
                         <div style={{fontWeight:"600",fontSize:"14px",color:"#1a1a1a"}}>{lot.name}</div>
                         <div style={{fontSize:"11px",color:"#aaa",marginTop:"2px"}}>{lot.id.slice(0,8)}...</div>
                       </td>
-                      <td style={{padding:"14px 16px",verticalAlign:"top"}}>
+                      <td style={{padding:"14px 16px",verticalAlign:"top",borderRight:"1px solid #F0F0F0"}}>
                         <div style={{fontSize:"13px",color:"#1a1a1a",fontWeight:"500"}}>{lot.owner_name}</div>
                       </td>
-                      <td style={{padding:"14px 16px",verticalAlign:"top"}}>
+                      <td style={{padding:"14px 16px",verticalAlign:"top",borderRight:"1px solid #F0F0F0"}}>
                         <div style={{fontSize:"12px",color:"#444"}}>{lot.owner_email}</div>
                         <div style={{fontSize:"12px",color:"#888",marginTop:"2px"}}>{lot.phone||"—"}</div>
                       </td>
-                      <td style={{padding:"14px 16px",verticalAlign:"top"}}>
+                      <td style={{padding:"14px 16px",verticalAlign:"top",borderRight:"1px solid #F0F0F0"}}>
                         <div style={{fontSize:"12px",color:"#444",maxWidth:"180px"}}>{lot.address}</div>
                       </td>
-                      <td style={{padding:"14px 16px",verticalAlign:"top"}}>
+                      <td style={{padding:"14px 16px",verticalAlign:"top",borderRight:"1px solid #F0F0F0"}}>
                         <div style={{display:"flex",flexWrap:"wrap",gap:"4px"}}>
                           {[["1h",lot.price_1hr],["2h",lot.price_2hr],["4h",lot.price_4hr],["8h",lot.price_8hr],["24h",lot.price_24hr]].filter(([,v])=>v).map(([l,v])=>(
                             <span key={l} style={{backgroundColor:"#F0F0F0",padding:"2px 7px",fontSize:"11px",color:"#444",borderRadius:"4px",whiteSpace:"nowrap"}}>{l}: ${v}</span>
                           ))}
                         </div>
                       </td>
-                      <td style={{padding:"14px 16px",verticalAlign:"top"}}>
+                      <td style={{padding:"14px 16px",verticalAlign:"top",borderRight:"1px solid #F0F0F0"}}>
                         {lot.stripe_account_id ? (
                           <a href={`https://dashboard.stripe.com/connect/accounts/${lot.stripe_account_id}`} target="_blank" rel="noreferrer" style={{fontSize:"11px",color:"#6366f1",textDecoration:"none"}}>
                             {lot.stripe_account_id.slice(0,14)}... ↗
                           </a>
                         ) : <span style={{fontSize:"12px",color:"#ccc"}}>—</span>}
                       </td>
-                      <td style={{padding:"14px 16px",verticalAlign:"top"}}>
+                      <td style={{padding:"14px 16px",verticalAlign:"top",borderRight:"1px solid #F0F0F0"}}>
                         <span style={{display:"inline-flex",alignItems:"center",gap:"5px",padding:"4px 10px",fontSize:"11px",fontWeight:"600",borderRadius:"20px",backgroundColor:lot.active?"#DCFCE7":"#FEF3C7",color:lot.active?"#16A34A":"#D97706"}}>
                           <span style={{width:"6px",height:"6px",borderRadius:"50%",backgroundColor:lot.active?"#16A34A":"#D97706",display:"inline-block"}}></span>
                           {lot.active?"Active":"Pending"}
                         </span>
                       </td>
-                      <td style={{padding:"14px 16px",verticalAlign:"top"}}>
+                      <td style={{padding:"14px 16px",verticalAlign:"top",borderRight:"1px solid #F0F0F0"}}>
                         <button
                           style={{padding:"7px 16px",fontSize:"12px",fontWeight:"600",cursor:"pointer",borderRadius:"6px",border:"none",backgroundColor:lot.active?"#FEE2E2":"#1a1a1a",color:lot.active?"#DC2626":"#fff",whiteSpace:"nowrap"}}
                           onClick={()=>toggleActive(lot.id,lot.active,lot)}
