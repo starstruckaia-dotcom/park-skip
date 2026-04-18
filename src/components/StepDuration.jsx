@@ -16,6 +16,7 @@ export default function StepDuration({ data, lotId, onNext, onBack }) {
       .then(r => r.json())
       .then(d => {
         const lot = Array.isArray(d) ? d[0] : d
+      if (!lot || lot.active === false) { setError("This lot is not verified or active. Please contact the lot owner."); setLoading(false); return }
         setPrices({ '1hr': lot.price_1hr, '2hr': lot.price_2hr, '4hr': lot.price_4hr, '8hr': lot.price_8hr, '24hr': lot.price_24hr })
         setLotName(lot.name)
         setLoading(false)
