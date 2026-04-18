@@ -2,7 +2,7 @@ import { useState } from "react";
 
 const WEBHOOK_URL = "https://lubiai.ca/webhook/parkskip-onboard-lot";
 const steps = ["Your Info", "Lot Details", "Pricing", "Review"];
-const initialForm = { owner_name: "", email: "", phone: "", lot_name: "", address: "", city: "", capacity: "", price_1hr: "", price_2hr: "", price_4hr: "", price_8hr: "", price_24hr: "" };
+const initialForm = { owner_name: "", email: "", phone: "", lot_name: "", address: "", city: "", capacity: "", fine_amount: "", price_1hr: "", price_2hr: "", price_4hr: "", price_8hr: "", price_24hr: "" };
 
 export default function Onboard() {
   const [step, setStep] = useState(0);
@@ -24,7 +24,7 @@ export default function Onboard() {
   const submit = async () => {
     setLoading(true); setError("");
     try {
-      const res = await fetch(WEBHOOK_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...form, capacity: parseInt(form.capacity), price_1hr: parseFloat(form.price_1hr)||0, price_2hr: parseFloat(form.price_2hr)||0, price_4hr: parseFloat(form.price_4hr)||0, price_8hr: parseFloat(form.price_8hr)||0, price_24hr: parseFloat(form.price_24hr)||0 }) });
+      const res = await fetch(WEBHOOK_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...form, capacity: parseInt(form.capacity), fine_amount: parseFloat(form.fine_amount) || 0, price_1hr: parseFloat(form.price_1hr)||0, price_2hr: parseFloat(form.price_2hr)||0, price_4hr: parseFloat(form.price_4hr)||0, price_8hr: parseFloat(form.price_8hr)||0, price_24hr: parseFloat(form.price_24hr)||0 }) });
       const data = await res.json();
       if (data.url) { setOnboardingUrl(data.url); setDone(true); } else { setError("Something went wrong. Please try again."); }
     } catch { setError("Connection error. Please try again."); }
@@ -45,7 +45,7 @@ export default function Onboard() {
           <div style={S.steps}>{steps.map((s,i) => (<div key={i} style={S.stepItem}><div style={{...S.stepDot,...(i===step?S.stepDotActive:i<step?S.stepDotDone:{})}}>{i<step?"✓":i+1}</div><span style={{...S.stepLabel,...(i===step?S.stepLabelActive:{})}}>{s}</span></div>))}</div>
           <div style={S.card}>
             {step===0&&<><h2 style={S.cardTitle}>YOUR INFORMATION</h2><p style={S.cardSub}>Tell us about yourself</p>{[["owner_name","Full Name","Jane Smith"],["email","Email Address","jane@example.com","email"],["phone","Phone Number","+1 613 555 0000","tel"]].map(([f,l,p,t="text"])=><div key={f} style={S.field}><label style={S.label}>{l}</label><input style={S.input} type={t} value={form[f]} onChange={e=>update(f,e.target.value)} placeholder={p}/></div>)}</>}
-            {step===1&&<><h2 style={S.cardTitle}>LOT DETAILS</h2><p style={S.cardSub}>Tell us about your parking lot</p>{[["lot_name","Lot Name","Downtown Lot A"],["address","Street Address","123 Main St"],["city","City","Ottawa, ON"],["capacity","Capacity (# of spots)","50","number"]].map(([f,l,p,t="text"])=><div key={f} style={S.field}><label style={S.label}>{l}</label><input style={S.input} type={t} value={form[f]} onChange={e=>update(f,e.target.value)} placeholder={p}/></div>)}</>}
+            {step===1&&<><h2 style={S.cardTitle}>LOT DETAILS</h2><p style={S.cardSub}>Tell us about your parking lot</p>{[["lot_name","Lot Name","Downtown Lot A"],["address","Street Address","123 Main St"],["city","City","Ottawa, ON"],["capacity","Capacity (# of spots)","50","number"],["fine_amount","Fine Amount CAD","65","number"]].map(([f,l,p,t="text"])=><div key={f} style={S.field}><label style={S.label}>{l}</label><input style={S.input} type={t} value={form[f]} onChange={e=>update(f,e.target.value)} placeholder={p}/></div>)}</>}
             {step===2&&<><h2 style={S.cardTitle}>PRICING TIERS</h2><p style={S.cardSub}>Set your rates in CAD. Leave blank to disable a tier.</p><div style={S.priceGrid}>{[["price_1hr","1 Hour"],["price_2hr","2 Hours"],["price_4hr","4 Hours"],["price_8hr","8 Hours"],["price_24hr","24 Hours"]].map(([f,l])=><div key={f}><label style={S.label}>{l}</label><div style={S.priceWrap}><span style={S.priceCur}>CA$</span><input style={S.priceInput} type="number" min="0" step="0.5" value={form[f]} onChange={e=>update(f,e.target.value)} placeholder="0.00"/></div></div>)}</div></>}
             {step===3&&<><h2 style={S.cardTitle}>REVIEW & SUBMIT</h2><p style={S.cardSub}>Confirm your details before submitting</p><div style={S.reviewSection}>{[["Name",form.owner_name],["Email",form.email],form.phone&&["Phone",form.phone]].filter(Boolean).map(([l,v])=><div key={l} style={S.reviewRow}><span style={S.reviewLabel}>{l}</span><span style={S.reviewValue}>{v}</span></div>)}</div><div style={S.reviewSection}>{[["Lot",form.lot_name],["Address",`${form.address}, ${form.city}`],["Capacity",`${form.capacity} spots`]].map(([l,v])=><div key={l} style={S.reviewRow}><span style={S.reviewLabel}>{l}</span><span style={S.reviewValue}>{v}</span></div>)}</div><div style={S.reviewSection}>{[["1hr",form.price_1hr],["2hr",form.price_2hr],["4hr",form.price_4hr],["8hr",form.price_8hr],["24hr",form.price_24hr]].filter(([,v])=>v).map(([l,v])=><div key={l} style={S.reviewRow}><span style={S.reviewLabel}>{l}</span><span style={S.reviewValue}>CA${v}</span></div>)}</div></>}
             {error&&<p style={S.error}>{error}</p>}
